@@ -44,11 +44,8 @@ The **Healthcare Stroke Dataset** contains demographic and medical information u
 ---
 
 ## 🔄 Project Workflow
-```
-Data Loading → EDA → Data Cleaning → Feature Engineering → Visualization
-     → Train/Test Split → Feature Scaling → Handle Imbalance
-          → Model Training → Evaluation → Threshold Optimization → Precision-Recall Analysis
-```
+
+Data Loading → EDA → Data Cleaning → Feature Engineering → Visualization → Train/Test Split → Feature Scaling → Handle Imbalance → Model Training → Evaluation → Threshold Optimization → Precision-Recall Analysis
 
 ### 1. Data Loading
 The dataset is loaded using **Pandas**. The non-informative `id` column is removed to prevent noise in the model.
@@ -121,11 +118,6 @@ The default classification threshold (0.5) is lowered to **increase recall**, en
 ---
 
 ## 🛠️ Technologies Used
-
-![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
-![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat&logo=pandas&logoColor=white)
-![NumPy](https://img.shields.io/badge/NumPy-013243?style=flat&logo=numpy&logoColor=white)
-![Scikit-learn](https://img.shields.io/badge/Scikit--learn-F7931E?style=flat&logo=scikit-learn&logoColor=white)
 
 - **Pandas** — Data loading and manipulation
 - **NumPy** — Numerical computation
