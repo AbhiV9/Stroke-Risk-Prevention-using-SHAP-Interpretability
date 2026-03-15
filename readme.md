@@ -1,4 +1,4 @@
-# 🧠 Stroke Risk Prediction Using Machine Learning and SHAP Interpretability
+# Stroke Risk Prediction Using Machine Learning and SHAP Interpretability
 
 ## Overview
 
@@ -10,18 +10,7 @@ This project develops a machine learning pipeline that predicts stroke risk usin
 
 ---
 
-## 📁 Project Structure
-```
-Stroke-Risk-Prediction/
-│
-├── Stroke_Project.ipynb
-├── healthcare-dataset-stroke-data.csv
-└── README.md
-```
-
----
-
-## 📊 Dataset
+## Dataset
 
 The **Healthcare Stroke Dataset** contains demographic and medical information used to predict whether a patient experienced a stroke.
 
@@ -43,7 +32,7 @@ The **Healthcare Stroke Dataset** contains demographic and medical information u
 
 ---
 
-## 🔄 Project Workflow
+## Project Workflow
 
 Data Loading → EDA → Data Cleaning → Feature Engineering → Visualization → Train/Test Split → Feature Scaling → Handle Imbalance → Model Training → Evaluation → Threshold Optimization → Precision-Recall Analysis
 
@@ -88,7 +77,7 @@ Stratified splitting ensures both sets maintain the same stroke-to-non-stroke ra
 
 ---
 
-## 🤖 Models Trained
+## Models Trained
 
 | Model | Description |
 |---|---|
@@ -100,7 +89,7 @@ All models are trained with **balanced class weights** to further penalize miscl
 
 ---
 
-## 📈 Model Evaluation
+## Model Evaluation
 
 Models are evaluated using:
 
@@ -117,7 +106,7 @@ The default classification threshold (0.5) is lowered to **increase recall**, en
 
 ---
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 - **Pandas** — Data loading and manipulation
 - **NumPy** — Numerical computation
@@ -128,7 +117,7 @@ The default classification threshold (0.5) is lowered to **increase recall**, en
 
 ---
 
-## 🔭 Future Work
+## Future Work
 
 - [ ] **SHAP Interpretability** — Identify features most strongly influencing stroke predictions and generate individual-level explanations
 - [ ] **Advanced Models** — Experiment with gradient boosting methods (XGBoost, LightGBM)
@@ -137,7 +126,7 @@ The default classification threshold (0.5) is lowered to **increase recall**, en
 
 ---
 
-## 💡 Motivation
+## Motivation
 
 This project explores how machine learning can assist with healthcare risk prediction. The focus is on building models that are both **accurate and interpretable** — because in medical applications, understanding *why* a model makes a prediction is just as important as the prediction itself.
 
