@@ -1,513 +1,274 @@
-A **GitHub README is not actually written in TypeScript**—GitHub renders READMEs using **Markdown (`.md`)**. However, many ML/AI repos style their READMEs with **TypeScript-style code blocks and documentation formatting** to make them look cleaner and more “engineering-oriented.”
-
-Below is a **README formatted with TypeScript-style structure and code blocks** while still being valid Markdown for GitHub.
-
-You can paste this directly into **`README.md`**.
+Below is **plain text you can paste directly into your GitHub README.md** (no special formatting that might break rendering). If you paste this into GitHub it should display normally.
 
 ---
 
-# Stroke Risk Prediction with Machine Learning and SHAP Interpretability
+# Stroke Risk Prediction Using Machine Learning and SHAP Interpretability
 
 ## Overview
 
-```ts
-type ProjectGoal = {
-  objective: string
-  approach: string[]
-  outcome: string
-}
-```
+Stroke is one of the leading causes of death and long-term disability worldwide. Early identification of individuals at high risk can significantly improve prevention and treatment outcomes.
 
-This project builds a **machine learning pipeline for predicting stroke risk** using patient health data. The goal is to create an accurate model while also understanding **which health factors contribute most strongly to stroke risk**.
+This project develops a machine learning pipeline that predicts stroke risk using patient health data. The workflow includes data preprocessing, handling class imbalance, training several machine learning models, evaluating their performance, and preparing the model for interpretability using SHAP (SHapley Additive exPlanations).
 
-Stroke is one of the leading causes of death and long-term disability worldwide. Early prediction allows for:
-
-* earlier medical intervention
-* preventative treatment
-* improved patient outcomes
-
-This project combines:
-
-* **data preprocessing**
-* **class imbalance handling**
-* **multiple machine learning models**
-* **precision-recall evaluation**
-* **threshold optimization**
-* **model interpretability with SHAP**
-
-The result is a **predictive healthcare model designed for interpretability and practical application.**
+The primary goal of this project is not only to build a predictive model but also to understand which health factors contribute most strongly to stroke risk.
 
 ---
 
-# Dataset
+## Dataset
 
-```ts
-interface StrokeDataset {
-  gender: "Male" | "Female"
-  age: number
-  hypertension: 0 | 1
-  heart_disease: 0 | 1
-  ever_married: "Yes" | "No"
-  work_type: string
-  residence_type: "Urban" | "Rural"
-  avg_glucose_level: number
-  bmi: number
-  smoking_status: string
-  stroke: 0 | 1
-}
-```
+The dataset used in this project is the Healthcare Stroke Dataset. It contains demographic and medical information about patients that can be used to predict whether a stroke has occurred.
 
-The dataset contains **demographic and medical attributes of patients** used to predict whether a stroke occurred.
+Important features in the dataset include:
 
-Key challenge:
+Gender – The gender of the patient
+Age – The patient's age
+Hypertension – Whether the patient has hypertension
+Heart Disease – Whether the patient has heart disease
+Ever Married – Marital status
+Work Type – Type of employment
+Residence Type – Whether the patient lives in an urban or rural area
+Average Glucose Level – Average blood glucose level in the blood
+BMI – Body Mass Index
+Smoking Status – Smoking history
+Stroke – Target variable indicating whether the patient experienced a stroke
 
-```ts
-const classImbalance = {
-  strokeCases: "≈5%",
-  nonStrokeCases: "≈95%"
-}
-```
-
-This imbalance requires specialized techniques such as **SMOTE oversampling and class weighting.**
+One major challenge of the dataset is that it is highly imbalanced. Only about five percent of the patients experienced a stroke, while the majority did not. Because of this imbalance, special techniques must be used to ensure the model properly learns patterns related to stroke risk.
 
 ---
 
-# Project Pipeline
+## Project Workflow
 
-The notebook follows a complete **machine learning workflow**.
+The project follows a complete machine learning workflow from raw data to model evaluation.
 
-```ts
-type PipelineSteps =
-  | "Data Loading"
-  | "Exploratory Data Analysis"
-  | "Data Cleaning"
-  | "Feature Engineering"
-  | "Data Visualization"
-  | "Train/Test Split"
-  | "Feature Scaling"
-  | "Class Imbalance Handling"
-  | "Model Training"
-  | "Model Evaluation"
-  | "Threshold Optimization"
-  | "Precision-Recall Analysis"
-```
+The major steps include:
 
----
-
-# 1. Data Loading
-
-The dataset is imported and processed using **Pandas**.
-
-```ts
-import pandas as pd
-
-const dataset = pd.read_csv("healthcare-dataset-stroke-data.csv")
-```
-
-The `id` column is removed because it does not contribute predictive information.
-
-```ts
-dataset.drop("id", axis=1)
-```
+1. Data Loading
+2. Exploratory Data Analysis
+3. Data Cleaning
+4. Feature Engineering
+5. Data Visualization
+6. Train/Test Splitting
+7. Feature Scaling
+8. Handling Class Imbalance
+9. Model Training
+10. Model Evaluation
+11. Threshold Optimization
+12. Precision-Recall Analysis
 
 ---
 
-# 2. Exploratory Data Analysis
+## Data Loading
 
-Initial exploration helps understand:
+The dataset is loaded using the Python library Pandas. After loading the dataset, the ID column is removed because it does not contain predictive information.
 
-```ts
-type EDA = {
-  inspectDataTypes: boolean
-  checkMissingValues: boolean
-  summaryStatistics: boolean
-}
-```
-
-Methods used:
-
-* `df.dtypes`
-* `df.isnull().sum()`
-* `df.describe()`
-
-This provides insights into:
-
-* variable distributions
-* missing values
-* feature ranges
-* dataset characteristics
+Removing non-informative columns prevents unnecessary noise in the model.
 
 ---
 
-# 3. Data Cleaning
+## Exploratory Data Analysis
 
-### Handling Missing Values
+Exploratory data analysis is performed to better understand the dataset.
 
-The **BMI column contains missing entries**.
+During this phase, the following analyses are conducted:
 
-Instead of removing rows, missing values are filled using the **median BMI value**.
+Inspection of data types
+Checking for missing values
+Summary statistics for each variable
+Distribution analysis of important variables
 
-```ts
-df["bmi"] = df["bmi"].fillna(df["bmi"].median())
-```
-
-Median imputation is chosen because it is **robust against outliers**.
-
----
-
-# 4. Feature Engineering
-
-Machine learning models require **numerical inputs**, so categorical variables must be encoded.
+This step helps identify issues in the data such as missing values or unexpected distributions.
 
 ---
 
-## Binary Encoding
+## Data Cleaning
 
-```ts
-const binaryEncoding = {
-  gender: { Male: 0, Female: 1 },
-  ever_married: { No: 0, Yes: 1 },
-  residence_type: { Rural: 0, Urban: 1 }
-}
-```
+The dataset contains missing values in the BMI column. Instead of removing those rows, the missing BMI values are replaced using the median BMI of the dataset.
 
-This converts categorical values into **numerical binary representations.**
+Median imputation is chosen because it is less sensitive to outliers than the mean.
+
+Cleaning the dataset ensures that machine learning algorithms can properly process the data.
 
 ---
 
-## Rare Category Handling
+## Feature Engineering
 
-The dataset contains a rare `"Other"` gender category with extremely low frequency.
+Machine learning models require numerical inputs, so categorical variables must be transformed.
 
-```ts
-df["gender"] = df["gender"].replace("Other", "Male")
-```
+Several encoding methods are used:
 
-This prevents **model instability caused by extremely rare classes.**
+Binary Encoding
+Binary categorical variables such as gender, marital status, and residence type are converted into numerical values.
 
----
+Handling Rare Categories
+The dataset contains a very small number of entries labeled as "Other" in the gender column. Because this category appears extremely rarely, it is replaced with the more common category to avoid instability during training.
 
-## One-Hot Encoding
-
-Multi-class categorical variables are converted using **one-hot encoding**.
-
-```ts
-type OneHotColumns =
-  | "work_type"
-  | "smoking_status"
-```
-
-Implementation:
-
-```ts
-df = pd.get_dummies(df, columns=["work_type", "smoking_status"], drop_first=true)
-```
-
-Dropping the first category prevents the **dummy variable trap.**
+One-Hot Encoding
+Categorical variables with multiple categories, such as work type and smoking status, are converted using one-hot encoding. This creates separate columns for each category while avoiding the dummy variable trap by dropping one redundant category.
 
 ---
 
-# 5. Data Visualization
+## Data Visualization
 
-Visualization helps identify patterns within the dataset.
+Visualization techniques are used to understand patterns within the data.
 
-Key plots include:
+Important visualizations include:
 
-```ts
-type Visualizations =
-  | "Stroke Distribution"
-  | "Age vs Stroke Histogram"
-  | "Feature Correlation Heatmap"
-```
+Stroke distribution plot
+Age distribution grouped by stroke occurrence
+Correlation heatmap between variables
 
-Important insights discovered:
+These visualizations reveal several insights:
 
-* Stroke probability increases **significantly with age**
-* **Hypertension and heart disease** correlate with stroke risk
-* **Glucose levels** appear linked with stroke probability
+Stroke risk increases significantly with age
+Hypertension and heart disease are correlated with stroke risk
+Higher glucose levels appear associated with stroke probability
 
----
-
-# 6. Train-Test Split
-
-The dataset is divided into **training and testing sets**.
-
-```ts
-type SplitConfig = {
-  testSize: 0.2
-  stratified: true
-  randomState: 42
-}
-```
-
-Stratified splitting ensures the **same stroke proportion in both datasets.**
+Understanding these relationships helps guide model development.
 
 ---
 
-# 7. Feature Scaling
+## Train/Test Split
 
-Numerical features are standardized using **StandardScaler**.
+The dataset is split into training and testing sets.
 
-```ts
-type Standardization = {
-  mean: 0
-  variance: 1
-}
-```
+The training set is used to train machine learning models, while the testing set is used to evaluate how well the model performs on unseen data.
 
-This improves performance for algorithms sensitive to scale, including:
-
-* Logistic Regression
-* Neural Networks
-* Gradient-based models
+Stratified sampling is used so that both the training and testing sets maintain the same stroke-to-non-stroke ratio as the original dataset.
 
 ---
 
-# 8. Handling Class Imbalance
+## Feature Scaling
 
-Because stroke cases are rare, the dataset is balanced using **SMOTE**.
+Several machine learning algorithms perform better when numerical features are scaled.
 
-```ts
-interface SMOTE {
-  method: "Synthetic Minority Oversampling Technique"
-  purpose: "Generate synthetic minority class samples"
-}
-```
+Standardization is applied to numerical features so that they have a mean of zero and a standard deviation of one.
 
-Implementation:
-
-```ts
-from imblearn.over_sampling import SMOTE
-
-const smote = new SMOTE()
-```
-
-SMOTE allows the model to **learn meaningful patterns from stroke cases.**
+This ensures that variables with larger scales do not dominate the learning process.
 
 ---
 
-# 9. Machine Learning Models
+## Handling Class Imbalance
 
-Multiple models are trained and compared.
+Because stroke cases are rare in the dataset, the model may otherwise learn to simply predict "no stroke" for most patients.
 
----
+To address this problem, SMOTE (Synthetic Minority Oversampling Technique) is used.
 
-## Logistic Regression
+SMOTE generates synthetic examples of the minority class, allowing the model to better learn patterns associated with stroke cases.
 
-```ts
-type LogisticRegression = {
-  modelType: "Linear Classification"
-  advantage: "Interpretability"
-}
-```
-
-Used as the **baseline predictive model.**
+This significantly improves the model’s ability to detect strokes.
 
 ---
 
-## Decision Tree
+## Machine Learning Models
 
-```ts
-type DecisionTree = {
-  modelType: "Tree-Based"
-  advantage: "Captures nonlinear relationships"
-}
-```
+Several models are trained and compared in this project.
 
-Decision trees create rule-based predictions using **feature splits.**
+Logistic Regression
+Logistic regression is used as a baseline model. It is simple, interpretable, and commonly used in medical prediction tasks.
 
----
+Decision Tree
+Decision trees create rule-based models that split data based on feature values. They can capture nonlinear relationships between variables.
 
-## Random Forest
-
-```ts
-type RandomForest = {
-  modelType: "Ensemble Learning"
-  trees: number
-  advantage: "Reduces overfitting"
-}
-```
-
-Random forests combine multiple decision trees for improved accuracy.
+Random Forest
+Random forest is an ensemble learning method that combines multiple decision trees. It reduces overfitting and usually provides stronger predictive performance.
 
 ---
 
-# 10. Class Weight Adjustment
+## Class Weight Adjustment
 
-To emphasize the minority class, models are trained with **balanced class weights**.
+To further address the imbalance in stroke cases, models are trained with balanced class weights.
 
-```ts
-const classWeight = {
-  stroke: "higher penalty",
-  nonStroke: "lower penalty"
-}
-```
-
-This forces the model to **prioritize stroke detection.**
+This increases the penalty for misclassifying stroke cases, forcing the model to pay greater attention to the minority class.
 
 ---
 
-# 11. Threshold Optimization
+## Threshold Optimization
 
-Instead of the default probability threshold of `0.5`, the threshold is lowered.
+Most classification models use a default probability threshold of 0.5.
 
-```ts
-const predictionThreshold = 0.25
-```
+However, in medical prediction problems, missing a true stroke case can be extremely dangerous.
 
-Lower thresholds increase **recall**, which is crucial in medical prediction systems.
+For this reason, the classification threshold is lowered. Lower thresholds increase recall, meaning the model catches more potential stroke cases even if it produces more false positives.
 
-Why?
-
-```ts
-type MedicalPriority = {
-  falseNegative: "very dangerous"
-  falsePositive: "acceptable tradeoff"
-}
-```
-
-Missing a stroke case is far worse than generating a false alert.
+In healthcare applications, this trade-off is often preferred.
 
 ---
 
-# 12. Model Evaluation
+## Model Evaluation
 
-Several evaluation metrics are used.
+Models are evaluated using several performance metrics.
 
-```ts
-type EvaluationMetrics = {
-  precision: string
-  recall: string
-  f1Score: string
-  accuracy: string
-  confusionMatrix: string
-}
-```
+Confusion Matrix
+The confusion matrix shows the number of true positives, true negatives, false positives, and false negatives.
 
----
+Precision
+Precision measures how many predicted stroke cases were actually strokes.
 
-## Confusion Matrix
+Recall
+Recall measures how many real stroke cases the model successfully detected.
 
-```ts
-interface ConfusionMatrix {
-  truePositive: number
-  trueNegative: number
-  falsePositive: number
-  falseNegative: number
-}
-```
+F1 Score
+The F1 score balances precision and recall.
 
-This shows how well the model detects stroke cases.
+Because the dataset is imbalanced, recall is particularly important.
 
 ---
 
-# 13. Precision-Recall Analysis
+## Precision-Recall Analysis
 
-Because of the dataset imbalance, **precision-recall curves** are used instead of accuracy alone.
+Precision-recall curves are used to evaluate model performance.
 
-```ts
-type PRCurve = {
-  precision: number[]
-  recall: number[]
-  averagePrecision: number
-}
-```
+Unlike accuracy, precision-recall analysis is better suited for imbalanced datasets because it focuses specifically on how well the model identifies the minority class.
 
-This evaluation measures how well the model detects **rare stroke events.**
+Models are compared based on their precision-recall curves and average precision scores.
 
 ---
 
-# Future Work
+## Future Work
 
-Next phases of the project include **model interpretability and improved predictive performance.**
+Several improvements are planned for future versions of the project.
 
-### SHAP Interpretability
+SHAP Interpretability
+SHAP will be used to interpret the predictions made by the model. This will help determine which features most strongly influence stroke risk and provide explanations for individual predictions.
 
-```ts
-interface SHAP {
-  name: "SHapley Additive exPlanations"
-  purpose: "Explain model predictions"
-}
-```
+Advanced Models
+Future experiments may include gradient boosting models such as XGBoost or LightGBM.
 
-SHAP will allow us to analyze:
+Hyperparameter Tuning
+Grid search or randomized search can be used to optimize model parameters.
 
-* global feature importance
-* individual patient predictions
-* model decision logic
+Cross Validation
+Cross validation will improve the reliability of performance estimates.
 
 ---
 
-### Planned Improvements
+## Project Structure
 
-```ts
-type FutureModels =
-  | "XGBoost"
-  | "LightGBM"
-  | "Gradient Boosting"
-```
+Stroke-Risk-Prediction
 
-Additional improvements:
-
-* hyperparameter tuning
-* cross validation
-* feature importance analysis
-* probability calibration
+Stroke_Project.ipynb
+healthcare-dataset-stroke-data.csv
+README.md
 
 ---
 
-# Project Structure
+## Technologies Used
 
-```ts
-Stroke-Risk-Prediction/
-│
-├── Stroke_Project.ipynb
-├── healthcare-dataset-stroke-data.csv
-├── README.md
-```
-
----
-
-# Technologies Used
-
-```ts
-type TechStack =
-  | "Python"
-  | "Pandas"
-  | "NumPy"
-  | "Matplotlib"
-  | "Seaborn"
-  | "Scikit-Learn"
-  | "Imbalanced-Learn"
-  | "SHAP"
-```
+Python
+Pandas
+NumPy
+Matplotlib
+Seaborn
+Scikit-learn
+Imbalanced-learn
+SHAP
 
 ---
 
-# Motivation
+## Motivation
 
-This project explores how **machine learning can assist healthcare decision making**.
+This project explores how machine learning can assist with healthcare risk prediction.
 
-The focus is on:
+The focus is on building models that are both accurate and interpretable. In medical applications, understanding why a model makes a prediction is just as important as the prediction itself.
 
-```ts
-type Principles = {
-  interpretableAI: true
-  responsibleML: true
-  medicalPrediction: true
-}
-```
-
-Predictive models are powerful, but **understanding why they make decisions is equally important**.
-
-By combining **machine learning and interpretability tools like SHAP**, this project aims to contribute to **transparent and trustworthy AI in healthcare.**
-
----
-
-If you'd like, I can also help you build **3 additions that make ML GitHub repos look *much* more impressive to professors and admissions officers:**
-
-* architecture diagrams
-* SHAP visualization examples
-* a workflow pipeline graphic
-
-These make the project look **10x more like real research work instead of just a notebook.**
+By combining machine learning with interpretability techniques such as SHAP, this project aims to contribute toward more transparent and trustworthy AI systems in healthcare.
